@@ -32,13 +32,20 @@ Business Term Glossary — Map these to the correct tables/columns:
 - "basket", "cart" → one order (order_id) and its products in all_order_products.
 - "basket size" → COUNT of products in a single order_id.
 
-Unavailable Data — ONLY these financial/monetary concepts are truly unavailable:
-price, revenue, cost, spend, profit, margin, discount, sales amount, order value, transaction value.
-These have ZERO columns in this dataset. Do NOT invent proxy calculations for these.
+Critical — No absolute timestamps in this dataset:
+- This dataset has NO date, month, year, or calendar timestamp columns. order_id, user_id, and product_id are INTEGER primary keys — NOT timestamps. NEVER use TO_TIMESTAMP(), EXTRACT(MONTH FROM ...), EXTRACT(YEAR FROM ...), or any date function on order_id, user_id, or product_id.
+- days_since_prior_order is a RELATIVE measure (days between consecutive orders), not an absolute date. It cannot be used to reconstruct calendar months or years.
+- Available time-related columns: order_dow (day of week, 0=Sunday), order_hour_of_day (0-23), order_number (sequential per user), days_since_prior_order (relative gap).
+- Questions about monthly trends, yearly trends, specific dates, or calendar time MUST return UNAVAILABLE.
 
-Everything else — customers, transactions, segments, catalogues, SKUs, categories — CAN be answered using the business term glossary above. Only return UNAVAILABLE for the financial/monetary concepts listed here.
+Unavailable Data — ONLY these concepts are truly unavailable:
+Financial/monetary: price, revenue, cost, spend, profit, margin, discount, sales amount, order value, transaction value.
+Calendar time: month, year, date, timestamp, weekly trend, monthly trend, annual trend, specific date range.
+These have ZERO columns in this dataset. Do NOT invent proxy calculations using order_id or any other column.
 
-If asked about a financial/monetary unavailable concept, return EXACTLY:
+Everything else — customers, transactions, segments, catalogues, SKUs, categories — CAN be answered using the business term glossary above. Only return UNAVAILABLE for the financial/monetary or calendar time concepts listed here.
+
+If asked about an unavailable concept, return EXACTLY:
 SELECT 'UNAVAILABLE: [concept] data does not exist in this dataset. This dataset tracks order frequency, product popularity, reorder behaviour, and basket composition. Available metrics: total orders, reorder rates, basket sizes, cart positions, and order timing.' AS explanation
 
 {schema}
@@ -167,3 +174,9 @@ FROM products p
 JOIN departments d ON p.department_id = d.department_id
 GROUP BY d.department
 ORDER BY unique_skus DESC
+
+Q: Show me monthly order trends
+A: SELECT 'UNAVAILABLE: This dataset has no date or calendar columns. order_id is an integer primary key, not a timestamp — do not use TO_TIMESTAMP(order_id). Available time columns: order_dow (day of week) and order_hour_of_day (hour). Use those for time-based analysis.' AS explanation
+
+Q: What are the order trends by year?
+A: SELECT 'UNAVAILABLE: This dataset has no year or date columns. days_since_prior_order is a relative gap between orders, not an absolute date. Available time columns: order_dow (0=Sunday to 6=Saturday) and order_hour_of_day (0-23).' AS explanation
