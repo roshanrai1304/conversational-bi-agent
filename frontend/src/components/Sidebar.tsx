@@ -1,8 +1,6 @@
 const NAV_ITEMS = [
   { id: 'chat', label: 'Dashboard', icon: '▦' },
   { id: 'history', label: 'Query History', icon: '◷' },
-  { id: 'reports', label: 'Saved Reports', icon: '▤' },
-  { id: 'datasets', label: 'Datasets', icon: '◫' },
 ]
 
 const BOTTOM_ITEMS = [
@@ -20,11 +18,8 @@ interface SidebarProps {
 export function Sidebar({ activeView, onNewAnalysis, onNavChange, sessionCount }: SidebarProps) {
   return (
     <aside className="fixed left-0 top-12 bottom-16 w-48 bg-sidebar border-r border-border flex flex-col z-10">
-      {/* Version */}
-      <p className="text-xs text-secondary px-3 pt-3 pb-2 tracking-wide">V1.2.0-STABLE</p>
-
       {/* New Analysis */}
-      <div className="px-3 mb-4">
+      <div className="px-3 mt-3 mb-4">
         <button
           onClick={onNewAnalysis}
           className="w-full flex items-center justify-center gap-2 bg-user-bubble hover:opacity-90 text-white text-sm font-medium rounded-lg py-2 transition"
