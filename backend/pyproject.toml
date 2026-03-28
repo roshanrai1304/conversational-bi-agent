@@ -1,0 +1,21 @@
+[project]
+name = "bi-agent-backend"
+version = "0.1.0"
+description = "Conversational BI Agent — Backend (Hireathon 2026)"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "duckdb",
+    "pandas",
+    "plotly",
+    "groq",
+    "python-dotenv",
+    "requests",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "httpx",
+]
